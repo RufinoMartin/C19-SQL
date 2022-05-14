@@ -126,7 +126,7 @@ RollingPeopleVaccinated numeric
 --     > We insert our previous query into that table.
 
 
-Insert into #PercentPopulationVaccinated
+Insert into #PercentPopulationVaccinated AS PopulationVaccinated
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
@@ -146,7 +146,7 @@ From #PercentPopulationVaccinated;
 
 --> 1. At least One Dose: Population vs Vaccination
 
-Create VIEW PercentPopulationVaccinated as PopulationVaccinated
+Create VIEW PercentPopulationVaccinated 
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
@@ -159,7 +159,7 @@ where dea.continent is not null;
 
 --> 2 . Shows likelihood of dying if you contract covid in your country
 
-Create VIEW as MortalityLikelihood
+Create VIEW as Mortality_Likelihood
 Select Location, date, total_cases,total_deaths, (total_deaths/total_cases)*100 as DeathPercentage
 From CovidDeaths$
 Where location like '%arg%' --insert any state--
